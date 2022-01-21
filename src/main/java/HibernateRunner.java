@@ -1,9 +1,9 @@
+import com.oskarbay.entity.PersonalInfo;
 import com.oskarbay.entity.User;
-import com.oskarbay.entity.util.HibernateUtil;
+import com.oskarbay.util.HibernateUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 
 import javax.persistence.PersistenceException;
 
@@ -13,8 +13,10 @@ public class HibernateRunner {
 
         var user = User.builder()
                 .username("serik@gmail.com")
-                .firstname("serik")
-                .lastname("serikov")
+                .personalInfo(PersonalInfo.builder()
+                        .firstname("serik")
+                        .lastname("serikov")
+                        .build())
                 .build();
         log.info("User entity is it transient state,object: {}",user);
 
@@ -32,7 +34,6 @@ public class HibernateRunner {
             }
             try (Session session2 = sessionFactory.openSession()) {
                 session2.beginTransaction();
-                user.setFirstname("Sveta");
                 // session2.delete(user);
                 // session2.refresh(user);
                 var merge = session2.merge(user);

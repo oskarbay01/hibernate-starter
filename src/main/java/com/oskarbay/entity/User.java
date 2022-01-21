@@ -9,7 +9,6 @@ import org.hibernate.annotations.Type;
 import org.hibernate.annotations.TypeDef;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
@@ -17,16 +16,18 @@ import java.time.LocalDate;
 @Entity
 @Builder
 @Table(name = "users", schema = "public")
-@TypeDef(name = "oskarbay",typeClass = JsonBinaryType.class)
+@TypeDef(name = "oskarbay", typeClass = JsonBinaryType.class)
 public class User {
 
     @Id
-    private String username;
-    private String firstname;
-    private String lastname;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name = "birth_date")
-    private LocalDate birthDate;
+    @Column(unique = true)
+    private String username;
+
+    @Embedded
+    private PersonalInfo personalInfo;
 
     @Enumerated(EnumType.STRING)
     private Role role;
@@ -34,5 +35,8 @@ public class User {
     @Type(type = "oskarbay")
     private String info;
 
-    private Integer age;
+    @ManyToOne
+    @JoinColumn(name = "company_id")
+    private Company company;
+
 }
